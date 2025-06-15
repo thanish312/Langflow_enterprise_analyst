@@ -1,43 +1,50 @@
-import { createTheme } from "@mui/material/styles";
+// src/theme.ts
+
+import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
-    mode: "dark",
+    mode: 'dark',
     background: {
-      default: "#181818",
-      paper: "#222222",
+      default: '#121212', // A deep, soft black
+      paper: '#1E1E1E',   // Slightly lighter for surfaces like headers and input bars
     },
     primary: {
-      main: "#1976d2",
-      contrastText: "#ECECF1",
+      main: '#3B82F6', // A vibrant blue for user messages and interactive elements
     },
     text: {
-      primary: "#ECECF1",
-      secondary: "#b0b0b0",
+      primary: '#E0E0E0',   // Off-white for primary text
+      secondary: '#B0B0B0', // Lighter gray for secondary text
     },
-    divider: "#2e2e2e",
   },
   typography: {
-    fontFamily: [
-      "Inter",
-      "Segoe UI",
-      "Arial",
-      "sans-serif"
-    ].join(","),
-    fontWeightRegular: 400,
-    fontWeightMedium: 500,
-    fontWeightBold: 700,
-  },
-  shape: {
-    borderRadius: 16,
+    fontFamily: '"Inter", "Segoe UI", Arial, sans-serif',
+    h6: {
+      fontWeight: 700,
+    },
+    body1: {
+      fontSize: '1rem',
+    },
   },
   components: {
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundImage: "none",
-        },
-      },
+    MuiCssBaseline: {
+      styleOverrides: `
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+          background: #1E1E1E;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #4A4A4A;
+          border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+      `,
     },
   },
 });

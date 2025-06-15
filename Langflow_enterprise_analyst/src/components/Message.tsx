@@ -1,64 +1,72 @@
+// src/components/Message.tsx
+
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import type { Message as MessageType } from "../hooks/useChat";
 
-const IMAGE_URL_REGEX = /(https?:\/\/[^\s]+?\.(?:png|jpg|jpeg|svg|gif))/gi;
+const IMAGE_URL_REGEX = /(https?:\/\/[^\s]+?\.(?:png|jpg|jpeg|svg|gif|webp))/gi;
 
 interface MessageProps {
   message: MessageType;
 }
 
-const MessageBubble: React.FC<MessageProps> = ({ message }) => {
+export const Message: React.FC<MessageProps> = ({ message }) => {
   const isUser = message.role === "user";
+  
+  // Use a more robust check for image-only messages
+  const isImageOnly = message.content.trim().match(IMAGE_URL_REGEX) && message.content.trim().match(IMAGE_URL_REGEX)![0] === message.content.trim();
   const parts = message.content.split(IMAGE_URL_REGEX).filter(Boolean);
 
   return (
     <Box
-      display="flex"
-      justifyContent={isUser ? "flex-end" : "flex-start"}
-      alignItems="flex-end"
+      sx={{
+        display: "flex",
+        justifyContent: isUser ? "flex-end" : "flex-start",
+      }}
     >
       <Paper
-        elevation={2}
+        elevation={isUser ? 2 : 1}
         sx={{
-          bgcolor: isUser ? "#1976d2" : "#232323",
-          color: isUser ? "#ECECF1" : "#ECECF1",
-          px: 2,
-          py: 1.5,
-          borderRadius: 3,
-          borderTopRightRadius: isUser ? 0 : 12,
-          borderTopLeftRadius: isUser ? 12 : 0,
-          maxWidth: "70%",
-          minWidth: 60,
-          mb: 0.5,
-          boxShadow: 1,
-          border: "1px solid #2e2e2e",
+          p: isImageOnly ? 0.5 : 2,
+          bgcolor: isUser ? "primary.main" : "background.paper",
+          color: isUser ? "white" : "text.primary",
+          borderRadius: "16px",
+          borderTopRightRadius: isUser ? '4px' : '16px',
+          borderTopLeftRadius: isUser ? '16px' : '4px',
+          maxWidth: { xs: '90%', sm: '80%', md: '70%' },
+          wordBreak: 'break-word',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
         }}
       >
         {parts.map((part, idx) =>
           IMAGE_URL_REGEX.test(part) ? (
-            <Box key={idx} my={1}>
+            <Box
+              key={idx}
+              component="a"
+              href={part}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ display: 'block', mt: parts.length > 1 ? 1 : 0 }}
+            >
               <img
                 src={part}
-                alt="Embedded"
+                alt="Generated analysis chart"
                 style={{
-                  borderRadius: 8,
-                  border: "1px solid #2e2e2e",
-                  maxWidth: "100%",
-                  display: "block",
-                  margin: "0.5em 0",
+                  borderRadius: '12px',
+                  maxWidth: '100%',
+                  display: 'block',
                 }}
               />
             </Box>
           ) : (
-            <Typography
-              key={idx}
-              variant="body1"
-              component="div"
-              sx={{ whiteSpace: "pre-line" }}
-            >
-              <ReactMarkdown>{part}</ReactMarkdown>
+            <Typography key={idx} component="div" className="prose prose-invert">
+                <ReactMarkdown
+                  components={{
+                    p: ({node, ...props}) => <p style={{margin: 0}} {...props} />,
+                    // Add more component overrides if needed for styling
+                  }}
+                >{part}</ReactMarkdown>
             </Typography>
           )
         )}
@@ -66,5 +74,3 @@ const MessageBubble: React.FC<MessageProps> = ({ message }) => {
     </Box>
   );
 };
-
-export default MessageBubble;

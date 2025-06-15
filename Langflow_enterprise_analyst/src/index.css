@@ -1,0 +1,12 @@
+/* Import Inter font for Material UI */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+/* Reset some default browser styles */
+body, html, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background: #181818;
+  color: #3a3a3b;
+}
